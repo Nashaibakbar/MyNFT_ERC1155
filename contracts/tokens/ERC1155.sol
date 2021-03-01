@@ -31,7 +31,7 @@ contract NFT is IERC1155{
     bytes calldata _data) 
     external override 
     {
-        require(msg.sender == _from || isApprovedForAll(msg.sender,_from)== true,"NFT#safeTransferFrom: Not A Owner Nor Operator");
+        require(msg.sender == _from || isApprovedForAll(_from,msg.sender)== true,"NFT#safeTransferFrom: Not A Owner Nor Operator");
         require(_to!=address(0),"NFT#safeTransferFrom: Not A valid receiver address");
         require(_value<= balanceOf(_from, _id),"NFT#safeTransferFrom: Not have proper funds");
 
@@ -72,7 +72,7 @@ contract NFT is IERC1155{
 
     function safeBatchTransferFrom(address _from, address _to, uint256[] calldata _ids,
     uint[] calldata _values, bytes calldata _data) external override {
-        require(msg.sender==_from || isApprovedForAll(msg.sender,_from),"NFT#safeBatchTransferFrom: Not A Owner Nor Operator");
+        require(msg.sender==_from || isApprovedForAll(_from,msg.sender) == true,"NFT#safeBatchTransferFrom: Not A Owner Nor Operator");
         require(_to!=address(0),"NFT#safeBatchTransferFrom: in valid receiver address.");
         require(_ids.length==_values.length,"NFT#safeBatchTransferFrom: id & value is not in same length ! ");
         
@@ -156,6 +156,7 @@ contract NFT is IERC1155{
 
 function _mint(address _to, uint256 _id, uint256 _amount, bytes memory _data) external  {
         require(_to!=address(0),"ERC1155_Mint#_mint: minting address is invalid.");
+       // require(balances[_to][_id]>0,"ERC1155_Mint#_mint: already exist id.");
         balances[_to][_id]= balances[_to][_id].add(_amount);
 
         emit TransferSingle(msg.sender,address(0x0), _to, _id, _amount);
